@@ -2,6 +2,7 @@ package com.wfh.example.backend.endpoints.websocket;
 
 import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -32,5 +33,11 @@ public class SocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         // store session ids and bind it to user ids later
         sessions.add(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        sessions.remove(session);
+        System.out.printf("Closed %s. Status: %s\n", session.getId(), status.toString());
     }
 }
